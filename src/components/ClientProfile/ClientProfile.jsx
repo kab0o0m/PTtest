@@ -910,7 +910,6 @@ const Convert = () => {
               ></textarea>
               <label htmlFor="manyTutorLink">ManyTutor Link:</label>
               <input
-                required
                 type="url"
                 name="manyTutorLink"
                 value={formData.manyTutorLink}
