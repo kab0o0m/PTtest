@@ -460,7 +460,7 @@ const Convert = () => {
         type: "CREATE_ASSIGNMENT",
         submitFormData,
       },
-      origin
+      "*"
     );
   };
 
