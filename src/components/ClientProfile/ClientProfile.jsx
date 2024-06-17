@@ -721,10 +721,11 @@ const Convert = () => {
   };
 
   window.addEventListener("message", function (event) {
-    // if (event.origin !== origin) {
-    //   console.warn("Received message from unknown origin:", event.origin);
-    //   return true;
-    // }
+    const trustedOrigins = ["https://admin.premiumtutors.sg"];
+    if (!trustedOrigins.includes(event.origin)) {
+      console.warn("Received message from unknown origin:", event.origin);
+      return;
+    }
 
     if (event.data.autofilledData) {
       setFormData({
