@@ -903,7 +903,6 @@ const Convert = () => {
             <div className="create-assignment-form-handler">
               <label htmlFor="internalRemarks">Internal Remarks:</label>
               <textarea
-                required
                 onChange={handleInputChange}
                 name="internalRemarks"
                 id="internalRemarks"
