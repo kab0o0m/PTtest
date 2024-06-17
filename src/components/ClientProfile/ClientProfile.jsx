@@ -460,7 +460,7 @@ const Convert = () => {
         type: "CREATE_ASSIGNMENT",
         submitFormData,
       },
-      "*"
+      origin
     );
   };
 
@@ -721,7 +721,7 @@ const Convert = () => {
   };
 
   window.addEventListener("message", function (event) {
-    const trustedOrigins = ["https://admin.premiumtutors.sg"];
+    const trustedOrigins = ["https://admin.premiumtutors.sg", "https://kab0o0m.github.io"];
     if (!trustedOrigins.includes(event.origin)) {
       console.warn("Received message from unknown origin:", event.origin);
       return;
