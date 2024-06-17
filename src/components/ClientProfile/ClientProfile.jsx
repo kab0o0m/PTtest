@@ -13,10 +13,10 @@ const Convert = () => {
   const [copy, setCopy] = useState("Copy to Clipboard");
   const [copy2, setCopy2] = useState("Copy to Clipboard");
   const [isLoading, setIsLoading] = useState(false);
-  const botToken = import.meta.env.VITE_TEST_TOKEN && import.meta.env.VITE_TEST_TOKEN.replace(/"/g, "");
-  const academicChannel = import.meta.env.VITE_TEST_ACADEMIC && import.meta.env.VITE_TEST_ACADEMIC.replace(/"/g, "");
-  const musicChannel = import.meta.env.VITE_TEST_MUSIC && import.meta.env.VITE_TEST_MUSIC.replace(/"/g, "");
-  const sportsChannel = import.meta.env.VITE_TEST_SPORTS && import.meta.env.VITE_TEST_SPORTS.replace(/"/g, "");
+  const botToken = import.meta.env.VITE_TEST_TOKEN.replace(/"/g, "");
+  const academicChannel = import.meta.env.VITE_TEST_ACADEMIC.replace(/"/g, "");
+  const musicChannel = import.meta.env.VITE_TEST_MUSIC.replace(/"/g, "");
+  const sportsChannel = import.meta.env.VITE_TEST_SPORTS.replace(/"/g, "");
   let origin = import.meta.env.VITE_TEST_IFRAME_ORIGIN;
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
@@ -720,28 +720,28 @@ const Convert = () => {
     setTextOutput1(e.target.value);
   };
 
-  // window.addEventListener("message", function (event) {
+  window.addEventListener("message", function (event) {
     
 
-  //   if (event.data.autofilledData) {
-  //     setFormData({
-  //       ClientName: event.data.autofilledData.client_name
-  //         ? event.data.autofilledData.client_name
-  //         : "",
-  //       internalRemarks: event.data.autofilledData.internal_remarks
-  //         ? event.data.autofilledData.internal_remarks
-  //         : "",
-  //       WhatsappNumber: event.data.autofilledData.phone
-  //         ? event.data.autofilledData.phone
-  //         : "",
-  //       manyTutorLink: event.data.autofilledData.many_tutors_link
-  //         ? event.data.autofilledData.many_tutors_link
-  //         : "",
-  //       isTuitionCenter: event.data.autofilledData.is_corporate_assignment,
-  //     });
-  //     setTextOutput1(event.data.autofilledData.content);
-  //   }
-  // });
+    if (event.data.autofilledData) {
+      setFormData({
+        ClientName: event.data.autofilledData.client_name
+          ? event.data.autofilledData.client_name
+          : "",
+        internalRemarks: event.data.autofilledData.internal_remarks
+          ? event.data.autofilledData.internal_remarks
+          : "",
+        WhatsappNumber: event.data.autofilledData.phone
+          ? event.data.autofilledData.phone
+          : "",
+        manyTutorLink: event.data.autofilledData.many_tutors_link
+          ? event.data.autofilledData.many_tutors_link
+          : "",
+        isTuitionCenter: event.data.autofilledData.is_corporate_assignment,
+      });
+      setTextOutput1(event.data.autofilledData.content);
+    }
+  });
 
   return (
     <div className="convert">
