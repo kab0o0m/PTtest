@@ -718,12 +718,30 @@ const Convert = () => {
 
   const ConfirmationTemplate = (e) => {
     setTextOutput1(e.target.value);
-    window.top.postMessage(
-      { type: "CONFIRM_TEMPLATE_CHANGE_VALUE", changeValue: e.target.value },
-      "*"
-    );
-    console.log(e.target.value, origin, "ss");
   };
+
+  // window.addEventListener("message", function (event) {
+    
+
+  //   if (event.data.autofilledData) {
+  //     setFormData({
+  //       ClientName: event.data.autofilledData.client_name
+  //         ? event.data.autofilledData.client_name
+  //         : "",
+  //       internalRemarks: event.data.autofilledData.internal_remarks
+  //         ? event.data.autofilledData.internal_remarks
+  //         : "",
+  //       WhatsappNumber: event.data.autofilledData.phone
+  //         ? event.data.autofilledData.phone
+  //         : "",
+  //       manyTutorLink: event.data.autofilledData.many_tutors_link
+  //         ? event.data.autofilledData.many_tutors_link
+  //         : "",
+  //       isTuitionCenter: event.data.autofilledData.is_corporate_assignment,
+  //     });
+  //     setTextOutput1(event.data.autofilledData.content);
+  //   }
+  // });
 
   return (
     <div className="convert">
