@@ -55,6 +55,7 @@ const Convert = () => {
     setCopy("Copy to Clipboard");
     setCopy2("Copy to Clipboard");
     window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
 
   // Function to copy text to clipboard
