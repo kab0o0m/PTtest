@@ -68,31 +68,90 @@ const Convert = () => {
     }
   };
 
-  /*Code generation:
-    First letter is "C"
-    Second and third letter is obtained from client level
-    Fourth and Fifth letter is obtained from client name
-  */
-  const codeGeneration = (clientName, clientLevel, clientSubject) => {
-    //First letter
-    const first_letter = "B";
 
-    //Get array of words by splitting them
-    const clientArr = (clientLevel + " " + clientSubject).split(" ");
+  //Fetch case
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-    //Second and third letter of the code generator
-    //By getting first letter of first two words to uppercase
-    const second_third_letter = (
-      clientArr[0][0] + clientArr[1][0]
-    ).toUpperCase();
+  const fetchCase = async (caseCode) => {
+    try {
+      const url = `https://admin.premiumtutors.sg/api/assignment/${caseCode}`;
+      const response = await axios.get(url);
+      const assignment = response.data.data;
+  
+      // If no assignment is found matching the caseCode
+      if (!assignment) {
+        console.log("Assignment code is valid");
+        return "valid"
+      } else {
+        console.log("Assignment code has been taken")
+        return "invalid"
+      }
 
-    //Fourth and fifth letter of the code generator
-    //By getting first two letters of client name after removing ms, mr, etc
-    const name = clientName.replace(/^(Mr|Ms|Mrs|Dr|Doc|Mdm|Md)\.?\s+/i, "");
-    const fourth_fifth_letter = (name[0] + name[1]).toUpperCase();
-
-    return first_letter + second_third_letter + fourth_fifth_letter;
+    } catch (error) {
+      if (error.message === "Network Error") {
+        Swal.fire({
+          title: "The Internet?",
+          text: "Network error! Please check your internet connection!",
+          icon: "question"
+        });
+        setIsLoading(false);
+        return;
+      } else if (error.response && error.response.status === 429) {
+        console.log("Too many requests. Please slow down.");
+        Swal.fire({
+          title: "Backend is down for awhile",
+          text: "Please wait for about 1 minute",
+          icon: "warning"
+        });
+        await delay(60000); // Delay for 1 second
+        
+        setIsLoading(false);
+        return "slow down";
+      } else {
+        console.log(error);
+        setIsLoading(false);
+        return;
+      }
+    }
   };
+  
+  const codeGeneration = async (clientName, clientLevel, clientSubject) => {
+    let first_letter = "A";
+    const clientArr = (clientLevel + " " + clientSubject).split(" ");
+    let second_third_letter = (clientArr[0][0] + clientArr[1][0]).toUpperCase();
+    const name = clientName.replace(/^(Mr|Ms|Mrs|Dr|Doc|Mdm|Md)\.?\s+/i, "");
+
+    let last_number = 1
+    last_number = last_number.toString().padStart(4, '0');
+
+    let fourth_letter = name[0].toUpperCase();
+    let code = first_letter + second_third_letter + fourth_letter + last_number;
+    
+
+    for (let index = 1; index <= 10000; index++) {
+      if (index === 10000) {
+        index = 1;
+        first_letter = 'B'
+      }
+
+      let existing_assignment = await fetchCase(code);
+      if (existing_assignment === 'invalid') {
+        index++;
+        last_number = index.toString().padStart(4, '0');
+        code = first_letter + second_third_letter + fourth_letter + last_number;
+        await delay(1000); // Add delay between requests to avoid rate limiting
+      } else if (existing_assignment === 'slow down') {
+        continue;
+      }
+      else {
+        break;
+      }
+    }
+    console.log(code);
+    return code;
+  };
+  
+  
 
   //For academic template
   let interested_applicants =
@@ -200,7 +259,7 @@ const Convert = () => {
 
           try {
             // Assuming getNearestMrt returns an array, even if it's empty
-            nearestMRT = getNearestMrt(clientLatLong, false, 3000);
+            nearestMRT = getNearestMrt(clientLatLong, false, 5000);
             nameOfNearestMrt = nearestMRT.result[0].station.name.toLowerCase();
             nameOfNearestMrt = nameOfNearestMrt
               .toLowerCase()
@@ -296,8 +355,7 @@ const Convert = () => {
         .replace(/\bjunior\b/i, "Junior College")
         .replace(/\bjc\b/i, "Junior College")
         .replace(/(jc|junior|junior college)(\d+)/i, "Junior College $2")
-        .replace(/\bis\b/i, "IGCSE")
-        .replace(/\bigcse\b/i, "IGCSE")
+        .replace(/(is|igcse)(\d+)/i, "IGCSE Year $2")
         .replace(/\bib/i, "IB Diploma")
         .replace(/\bpoly\b/i, "Polytechnic")
         .replace(/\bpolytechnic\b/i, "Polytechnic")
@@ -324,7 +382,7 @@ const Convert = () => {
     //Gets Remarks
     let clientRemarks = "";
     if (formData["remarks"]) {
-      clientRemarks = " " + formData["remarks"];
+      clientRemarks = " " + formData["remarks"] + ".";
     }
 
     const clientSubject = formData["subject"].trim();
@@ -356,38 +414,42 @@ const Convert = () => {
 
     let clientFees = "";
     const calculateFees = () => {
+
       if (clientLevel.toLowerCase() in fees) {
         const rate = fees[clientLevel.toLowerCase()];
-        if (formData["tutor1"] && rate["ptt"]) {
-          clientFees =
-            clientFees +
-            rate["ptt"] +
-            "/hour" +
-            " Part Time/Undergrad Tutor" +
-            "\n";
-        }
-        if (formData["tutor2"] && rate["ftt"]) {
-          clientFees =
-            clientFees +
-            rate["ftt"] +
-            "/hour" +
-            " Full Time/Graduate Tutor" +
-            "\n";
-        }
-        if (formData["tutor3"] && rate["moe"]) {
-          clientFees =
-            clientFees +
-            rate["moe"] +
-            "/hour" +
-            " Ex/Current School Teachers" +
-            "\n";
-        }
         if (rate[clientSubject.toLowerCase()]) {
           clientFees =
             clientFees + rate[clientSubject.toLowerCase()] + "/lesson";
+        } else {
+          if (formData["tutor1"] && rate["ptt"]) {
+            clientFees =
+              clientFees +
+              rate["ptt"] +
+              "/hour" +
+              " Part Time/Undergrad Tutor" +
+              "\n";
+          }
+          if (formData["tutor2"] && rate["ftt"]) {
+            clientFees =
+              clientFees +
+              rate["ftt"] +
+              "/hour" +
+              " Full Time/Graduate Tutor" +
+              "\n";
+          }
+          if (formData["tutor3"] && rate["moe"]) {
+            clientFees =
+              clientFees +
+              rate["moe"] +
+              "/hour" +
+              " Ex/Current School Teachers" +
+              "\n";
+          }
         }
       } else {
         clientFees = "";
+      }
+      if (clientFees == "") {
         Swal.fire({
           title: "Fees",
           text: "Fees not calculated, please key in fees manually!",
@@ -396,6 +458,8 @@ const Convert = () => {
       }
     };
     calculateFees();
+
+    let code = await codeGeneration(clientName, clientLevel, clientSubject)
 
     try {
       clientLevel = clientLevel.charAt(0).toUpperCase() + clientLevel.slice(1);
@@ -411,7 +475,7 @@ const Convert = () => {
       }\n${"Commission: " + commission}\n\n${
         "Remarks:" + clientRemarks
       }\n\n${interested_applicants}\n\n${
-        "Code: " + codeGeneration(clientName, clientLevel, clientSubject)
+        "Code: " + code
       }`;
 
       setTextOutput1(TelegramTemplate);
@@ -425,14 +489,15 @@ const Convert = () => {
       }\n${"Commission: " + commission}\n\n${
         "Remarks:" + clientRemarks
       }\n\n${"Interested applicants, please email your profile to contact@premiumtutors.sg with the following details:"}\n\n${
-        "Code: " + codeGeneration(clientName, clientLevel, clientSubject)
+        "Code: " + code
       }\n\n${"Full name:"}\n${"Age, Gender:"}\n${"Address:"}\n${"Contact Number:"}\n${"Qualifications:"}\n${"Current Occupation:"}\n${"Tuition Experience (in years):"}\n${"Brief description of experience in relevant subject(s):"}\n${"Preferred timings:"}\n${"Expected hourly rate:"}`;
+
       setTextOutput2(ManyTutorsTemplate);
 
       //Scroll to the Bottom of the page to see results
       setIsLoading(false);
       window.scrollTo({
-        top: 800,
+        top: 1300,
         behavior: "smooth",
       });
     } catch (error) {
@@ -988,8 +1053,8 @@ const Convert = () => {
               <p>"sec1", "Sec 3", "Secondary4"</p>
               <p>Junior College (JC)</p>
               <p>"jc", "junior", "junior college"</p>
-              <p>IGCSE</p>
-              <p>"is", "igcse"</p>
+              <p>IGCSE 1-6</p>
+              <p>"is1", "igcse3", "igcse 5"</p>
               <p>IB Diploma</p>
               <p>"ib"</p>
               <p>Tertiary</p>
@@ -998,6 +1063,8 @@ const Convert = () => {
               <p>"u","uni", "university"</p>
               <p>Adult Learner</p>
               <p>"adult", "adult learner"</p>
+              <p>Grade 1-10 (Academics)</p>
+              <p>"grade1", "g2", "g 5"</p>
             </div>
             <div className="music">
               <p>Beginner (Music)</p>
@@ -1015,9 +1082,9 @@ const Convert = () => {
               <br />
               <br />
               <p>Subjects available</p>
-              <p>Music: Piano, Guitar, Violin, Drums, Ukulele</p>
+              <p><strong>Music:</strong> Piano, Guitar, Violin, Drums, Ukulele</p>
               <br />
-              <p>Sports: private, pair, group</p>
+              <p><strong>Sports:</strong> private, pair, group</p>
             </div>
           </div>
         </div>
