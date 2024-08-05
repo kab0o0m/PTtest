@@ -75,7 +75,7 @@ const Convert = () => {
   */
   const codeGeneration = (clientName, clientLevel, clientSubject) => {
     //First letter
-    const first_letter = "B";
+    const first_letter = "#B";
 
     //Get array of words by splitting them
     const clientArr = (clientLevel + " " + clientSubject).split(" ");
@@ -710,7 +710,7 @@ const Convert = () => {
   };
 
   const extractCode = (message) => {
-    const codePattern = /Code:\s(\w+)/;
+    const codePattern = /Code:\s(#\w+)/;
     const match = message.match(codePattern);
     return match ? match[1] : null;
   };
