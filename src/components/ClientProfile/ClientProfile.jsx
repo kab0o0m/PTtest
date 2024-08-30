@@ -425,7 +425,7 @@ const Convert = () => {
       const code = await codeGeneration(clientName, clientLevel, clientSubject);
       let TelegramTemplate = `${
         clientLevel + " " + clientSubject + tutorType + " @ " + nameOfNearestMrt
-      }(#${code})\n
+      } (#${code})\n
       \n${"Details of assignment"}\n${"Location: " + clientAddress.address}\n${
         "Duration: " + clientFrequency
       }\n${"Timing: " + clientTimings}\n\n${"Fees: " + clientFees}\n${
@@ -727,7 +727,7 @@ const Convert = () => {
   };
 
   const extractCode = (message) => {
-    const codePattern = /Code:\s(#\w+)/;
+    const codePattern = /Code:\s(\w+)/;
     const match = message.match(codePattern);
     return match ? match[1] : null;
   };
