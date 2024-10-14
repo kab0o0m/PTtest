@@ -20,7 +20,8 @@ const Convert = () => {
   let origin = import.meta.env.VITE_TEST_IFRAME_ORIGIN;
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
-  const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvn3QkUnGl7JX8WehOuHXdl8sijfnENOLgz9pKOIPCEh388g/viewform?usp=pp_url&entry.1366584600=";
+  const formURL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSdvn3QkUnGl7JX8WehOuHXdl8sijfnENOLgz9pKOIPCEh388g/viewform?usp=pp_url&entry.1366584600=";
 
   //Empty form
   const initialFormData = {
@@ -55,7 +56,6 @@ const Convert = () => {
     setCopy("Copy to Clipboard");
     setCopy2("Copy to Clipboard");
     window.scrollTo({ top: 0, behavior: "smooth" });
-
   };
 
   // Function to copy text to clipboard
@@ -86,11 +86,10 @@ const Convert = () => {
     const data = await generateCode(
       "https://admin.premiumtutors.sg/api/generated-codes"
     );
-    console.log(data, "functo");
 
     const first_letter = data.letter ? data.letter : "";
     const generatedNumber = data.generatedNumber ? data.generatedNumber : "";
-    console.log(first_letter, generatedNumber, "==>letter");
+ 
     //my work
 
     //Get array of words by splitting them
@@ -113,7 +112,7 @@ const Convert = () => {
 
   //For academic template
   let interested_applicants =
-    "Interested applicants, please apply via https://forms.gle/VCuCj7Pkdm7kMRX49 or message @premiumtutorsjobs";
+    "Interested applicants, please apply via https://forms.gle/VCuCj7Pkdm7kMRX49 \n\nIf you have any other enquiries, you may contact us @premiumtutorsjobs";
 
   // Get Full address from Onemap API, postal code is obtained from form
   const getFullAddress = async (postal) => {
@@ -372,7 +371,6 @@ const Convert = () => {
 
     let clientFees = "";
     const calculateFees = () => {
-
       if (clientLevel.toLowerCase() in fees) {
         const rate = fees[clientLevel.toLowerCase()];
         if (rate[clientSubject.toLowerCase()]) {
@@ -444,7 +442,7 @@ const Convert = () => {
         "Fees: " + clientFees
       }\n${"Commission: " + commission}\n\n${
         "Remarks:" + clientRemarks
-      }\n\n${"Interested applicants, please email your profile to contact@premiumtutors.sg with the following details:"}\n\n${
+      }\n\n${interested_applicants}\n\n${
         "Code: " + code
       }\n\n${"Full name:"}\n${"Age, Gender:"}\n${"Address:"}\n${"Contact Number:"}\n${"Qualifications:"}\n${"Current Occupation:"}\n${"Tuition Experience (in years):"}\n${"Brief description of experience in relevant subject(s):"}\n${"Preferred timings:"}\n${"Expected hourly rate:"}`;
 
@@ -743,8 +741,6 @@ const Convert = () => {
   };
 
   window.addEventListener("message", function (event) {
-    
-
     if (event.data.autofilledData) {
       setFormData({
         ClientName: event.data.autofilledData.client_name
@@ -1038,9 +1034,13 @@ const Convert = () => {
               <br />
               <br />
               <p>Subjects available</p>
-              <p><strong>Music:</strong> Piano, Guitar, Violin, Drums, Ukulele</p>
+              <p>
+                <strong>Music:</strong> Piano, Guitar, Violin, Drums, Ukulele
+              </p>
               <br />
-              <p><strong>Sports:</strong> private, pair, group</p>
+              <p>
+                <strong>Sports:</strong> private, pair, group
+              </p>
             </div>
           </div>
         </div>
