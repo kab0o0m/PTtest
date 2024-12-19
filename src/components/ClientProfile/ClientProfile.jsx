@@ -759,6 +759,12 @@ const Convert = () => {
       });
       setTextOutput1(event.data.autofilledData.content);
     }
+
+    if (event.data.type === "AUTO_CASE_POSTING") {
+      const autoCasePosting = event.data.autoCasePostingData;
+      console.log("Received auto case posting data:", autoCasePosting);
+      setFormData({ ...autoCasePosting }); // Update form state with received data
+    }
   });
 
   return (
