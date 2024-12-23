@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ClientProfile.css";
 import getNearestMrt from "nearest-mrt";
 import fees from "../../Fees.jsx";
@@ -803,7 +803,6 @@ const Convert = () => {
         console.log("Received auto case posting data:", autoCasePosting);
         setFormData({ ...autoCasePosting }); // Update form state with received data
       }
-      // 11 22 25 27
     });
   }, []);
 
