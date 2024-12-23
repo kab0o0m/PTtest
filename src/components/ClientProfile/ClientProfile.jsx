@@ -370,6 +370,7 @@ const Convert = () => {
     const commission = calculateCommission();
 
     let clientFees = "";
+
     const calculateFees = () => {
       if (clientLevel.toLowerCase() in fees) {
         const rate = fees[clientLevel.toLowerCase()];
@@ -378,28 +379,40 @@ const Convert = () => {
             clientFees + rate[clientSubject.toLowerCase()] + "/lesson";
         } else {
           if (formData["tutor1"] && rate["ptt"]) {
-            clientFees =
-              clientFees +
-              rate["ptt"] +
-              "/hour" +
-              " Part Time/Undergrad Tutor" +
-              "\n";
+            if (formData.tutor1 && formData.partTimeUnderGraduate) {
+              clientFees = clientFees + formData.partTimeUnderGraduate + "\n";
+            } else {
+              clientFees =
+                clientFees +
+                rate["ptt"] +
+                "/hour" +
+                " Part Time/Undergrad Tutor" +
+                "\n";
+            }
           }
           if (formData["tutor2"] && rate["ftt"]) {
-            clientFees =
-              clientFees +
-              rate["ftt"] +
-              "/hour" +
-              " Full Time/Graduate Tutor" +
-              "\n";
+            if (formData.tutor2 && formData.fullTimeTutor) {
+              clientFees = clientFees + formData.fullTimeTutor + "\n";
+            } else {
+              clientFees =
+                clientFees +
+                rate["ftt"] +
+                "/hour" +
+                " Full Time/Graduate Tutor" +
+                "\n";
+            }
           }
           if (formData["tutor3"] && rate["moe"]) {
-            clientFees =
-              clientFees +
-              rate["moe"] +
-              "/hour" +
-              " Ex/Current School Teachers" +
-              "\n";
+            if (formData.tutor3 && formData.moeTeacher) {
+              clientFees = clientFees + formData.moeTeacher + "\n";
+            } else {
+              clientFees =
+                clientFees +
+                rate["moe"] +
+                "/hour" +
+                " Ex/Current School Teachers" +
+                "\n";
+            }
           }
         }
       } else {
@@ -740,32 +753,59 @@ const Convert = () => {
     setTextOutput1(e.target.value);
   };
 
-  window.addEventListener("message", function (event) {
-    if (event.data.autofilledData) {
-      setFormData({
-        ClientName: event.data.autofilledData.client_name
-          ? event.data.autofilledData.client_name
-          : "",
-        internalRemarks: event.data.autofilledData.internal_remarks
-          ? event.data.autofilledData.internal_remarks
-          : "",
-        WhatsappNumber: event.data.autofilledData.phone
-          ? event.data.autofilledData.phone
-          : "",
-        manyTutorLink: event.data.autofilledData.many_tutors_link
-          ? event.data.autofilledData.many_tutors_link
-          : "",
-        isTuitionCenter: event.data.autofilledData.is_corporate_assignment,
-      });
-      setTextOutput1(event.data.autofilledData.content);
-    }
+  useEffect(() => {
+    window.addEventListener("message", function (event) {
+      if (event.data.autofilledData) {
+        setFormData({
+          ClientName: event.data.autofilledData.client_name
+            ? event.data.autofilledData.client_name
+            : "",
+          internalRemarks: event.data.autofilledData.internal_remarks
+            ? event.data.autofilledData.internal_remarks
+            : "",
+          WhatsappNumber: event.data.autofilledData.phone
+            ? event.data.autofilledData.phone
+            : "",
+          manyTutorLink: event.data.autofilledData.many_tutors_link
+            ? event.data.autofilledData.many_tutors_link
+            : "",
+          isTuitionCenter: event.data.autofilledData.is_corporate_assignment,
+        });
+        setTextOutput1(event.data.autofilledData.content);
+      }
 
-    if (event.data.type === "AUTO_CASE_POSTING") {
-      const autoCasePosting = event.data.autoCasePostingData;
-      console.log("Received auto case posting data:", autoCasePosting);
-      setFormData({ ...autoCasePosting }); // Update form state with received data
-    }
-  });
+      if (event.data.type === "AUTO_CASE_POSTING") {
+        const autoCasePosting = event.data.autoCasePostingData;
+        autoCasePosting?.categoryTutorPrices.forEach((category) => {
+          if (
+            category.categoryTutor == "PT" ||
+            category.categoryTutor == "UG" ||
+            category.categoryTutor == "UGG"
+          ) {
+            autoCasePosting.tutor1 = category.categoryTutor;
+            if (category.price) {
+              autoCasePosting.partTimeUnderGraduate = `${category.price}/hour Part Time/Undergrad Tutor`;
+            }
+          }
+          if (category.categoryTutor == "FTT") {
+            autoCasePosting.tutor2 = category.categoryTutor;
+            if (category.price) {
+              autoCasePosting.fullTimeTutor = `${category.price}/hour Full Time/Graduate Tutor`;
+            }
+          }
+          if (category.categoryTutor == "MOE") {
+            autoCasePosting.tutor3 = category.categoryTutor;
+            if (category.price) {
+              autoCasePosting.moeTeacher = `${category.price}/hour Ex/Current School Teachers`;
+            }
+          }
+        });
+        console.log("Received auto case posting data:", autoCasePosting);
+        setFormData({ ...autoCasePosting }); // Update form state with received data
+      }
+      // 11 22 25 27
+    });
+  }, []);
 
   return (
     <div className="convert">
