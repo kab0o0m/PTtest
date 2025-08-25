@@ -359,14 +359,29 @@ const Convert = () => {
     //Gets timings
     const clientTimings = formData["timings"];
 
-    //Calculate commission for the company
-    const calculateCommission = () => {
-      let calc = `First ${parseInt(clientFrequency[0]) * 2} lessons`;
-      if (clientFrequency.includes("per subject")) {
-        calc = calc + " per subject";
-      }
-      return calc;
-    };
+    // //Calculate commission for the company
+    // const calculateCommission = () => {
+    //   let calc = `First ${parseInt(clientFrequency[0]) * 2} lessons`;
+    //   if (clientFrequency.includes("per subject")) {
+    //     calc = calc + " per subject";
+    //   }
+    //   return calc;
+    // };
+
+const calculateCommission = () => {
+  // Agar Separate Tutor tick ho
+  if (formData["separateTutor"]) {
+    return `First ${parseInt(clientFrequency[0]) * 2} lessons per subject`;
+  }
+
+  // Normal calculation
+  let calc = `First ${parseInt(clientFrequency[0]) * 2} lessons`;
+  if (clientFrequency.includes("per subject")) {
+    calc = calc + " per subject";
+  }
+  return calc;
+};
+
 
     const commission = calculateCommission();
 
@@ -870,7 +885,7 @@ const Convert = () => {
                 placeholder="Eg. math, science, english"
                 required
               />
-              <div id="separateTutor">
+              <div id="sameTutor-wrapper" >
                 <input
                   type="checkbox"
                   id="separateTutor"
@@ -881,7 +896,7 @@ const Convert = () => {
                 />
                 <label for="separateTutor">Separate Tutors</label>
               </div>
-              <div id="sameTutor">
+              <div id="sameTutor-wrapper">
                 <input
                   type="checkbox"
                   id="sameTutor"

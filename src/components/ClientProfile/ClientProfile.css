@@ -127,14 +127,14 @@ textarea {
 #tutor3 input,
 #music input,
 #online input,
-#separateTutor input,
-#sameTutor input {
+#separateTutor-wrapper input,
+#sameTutor-wrapper input {
   width: 2rem;
 }
 
 #online,
-#separateTutor,
-#sameTutor {
+#separateTutor-wrapper,
+#sameTutor-wrapper {
   display: flex;
   align-items: center;
   justify-content: flex-start;
