@@ -376,9 +376,6 @@ const calculateCommission = () => {
 
   // Normal calculation
   let calc = `First ${parseInt(clientFrequency[0]) * 2} lessons`;
-  if (clientFrequency.includes("per subject")) {
-    calc = calc + " per subject";
-  }
   return calc;
 };
 
