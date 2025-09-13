@@ -941,8 +941,8 @@ const calculateCommission = () => {
             <div id="tutor1">
               <input
                 type="checkbox"
-                id="tutor1"
-                name="tutor1_input"
+                id="tutor1_input"
+                name="tutor1"
                 value="ftt"
                 checked={formData.tutor1}
                 onChange={handleInputChange}
