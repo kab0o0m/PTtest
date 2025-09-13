@@ -579,12 +579,14 @@ const calculateCommission = () => {
     };
 
     try {
-      await axios.post(url, {
-        chat_id: academicId,
-        text: message,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-        reply_markup: JSON.stringify(inlineButton),
+      await axios.post("https://admin.premiumtutors.sg/api/send-telegram-bot", {
+        channel: "academic",
+        message,
+        keyboard: inlineButton,
+      }, {
+        headers: {
+          Authorization: `Bearer aRAnlIPsOLEYLITHigaVIumEr`
+        }
       });
 
       Swal.fire({
@@ -646,19 +648,23 @@ const calculateCommission = () => {
     };
 
     try {
-      await axios.post(url, {
-        chat_id: academicId,
-        text: message,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-        reply_markup: JSON.stringify(inlineButton),
+      await axios.post("https://admin.premiumtutors.sg/api/send-telegram-bot", {
+        channel: "academic",
+        message,
+        keyboard: inlineButton,
+      }, {
+        headers: {
+          Authorization: `Bearer aRAnlIPsOLEYLITHigaVIumEr`
+        }
       });
-      await axios.post(url, {
-        chat_id: musicId,
-        text: message,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-        reply_markup: JSON.stringify(inlineButton),
+      await axios.post("https://admin.premiumtutors.sg/api/send-telegram-bot", {
+        channel: "music",
+        message,
+        keyboard: inlineButton,
+      }, {
+        headers: {
+          Authorization: `Bearer aRAnlIPsOLEYLITHigaVIumEr`
+        }
       });
 
       Swal.fire({
@@ -720,19 +726,23 @@ const calculateCommission = () => {
     };
 
     try {
-      await axios.post(url, {
-        chat_id: academicId,
-        text: message,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-        reply_markup: JSON.stringify(inlineButton),
+      await axios.post("https://admin.premiumtutors.sg/api/send-telegram-bot", {
+        channel: "academic",
+        message,
+        keyboard: inlineButton,
+      }, {
+        headers: {
+          Authorization: `Bearer aRAnlIPsOLEYLITHigaVIumEr`
+        }
       });
-      await axios.post(url, {
-        chat_id: sportsId,
-        text: message,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-        reply_markup: JSON.stringify(inlineButton),
+      await axios.post("https://admin.premiumtutors.sg/api/send-telegram-bot", {
+        channel: "sports",
+        message,
+        keyboard: inlineButton,
+      }, {
+        headers: {
+          Authorization: `Bearer aRAnlIPsOLEYLITHigaVIumEr`
+        }
       });
       Swal.fire({
         title: "Success",
@@ -932,34 +942,34 @@ const calculateCommission = () => {
               <input
                 type="checkbox"
                 id="tutor1"
-                name="tutor1"
+                name="tutor1_input"
                 value="ftt"
                 checked={formData.tutor1}
                 onChange={handleInputChange}
               />
-              <label for="tutor1">Part Time/Undergrad Tutor</label>
+              <label for="tutor1_input">Part Time/Undergrad Tutor</label>
             </div>
             <div id="tutor2">
               <input
                 type="checkbox"
-                id="tutor2"
+                id="tutor2_input"
                 name="tutor2"
                 value="ftt"
                 checked={formData.tutor2}
                 onChange={handleInputChange}
               />
-              <label for="tutor2">Full Time/Graduate Tutor</label>
+              <label for="tutor2_input">Full Time/Graduate Tutor</label>
             </div>
             <div id="tutor3">
               <input
                 type="checkbox"
-                id="tutor3"
+                id="tutor3_input"
                 name="tutor3"
                 value="ftt"
                 checked={formData.tutor3}
                 onChange={handleInputChange}
               />
-              <label for="tutor3">Ex /Current School Teachers</label>
+              <label for="tutor3_input">Ex /Current School Teachers</label>
             </div>
 
             <br />
