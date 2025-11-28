@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 
 const Convert = () => {
   //Text output1 and output2 is used to generate formatted data
+  const [clientFeesState, setClientFeesState] = useState(" ");
   const [textOutput1, setTextOutput1] = useState(" ");
   const [textOutput2, setTextOutput2] = useState(" ");
   const [copy, setCopy] = useState("Copy to Clipboard");
@@ -441,6 +442,8 @@ const calculateCommission = () => {
     };
     calculateFees();
 
+    setClientFeesState(clientFees);
+
     try {
       clientLevel = clientLevel.charAt(0).toUpperCase() + clientLevel.slice(1);
       setCopy("Copy to Clipboard");
@@ -486,6 +489,16 @@ const calculateCommission = () => {
   };
 
   const sendToWix = () => {
+    if (!clientFeesState || clientFeesState.trim() === "") {
+      Swal.fire({
+        title: "Required Fees!",
+        text: "Fees value missing! Please calculate fees before sending.",
+        icon: "warning",
+        confirmButtonText: "Okay",
+      });
+      return;
+    }
+
     const {
       internalRemarks,
       manyTutorLink,
