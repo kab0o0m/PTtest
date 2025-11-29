@@ -489,15 +489,15 @@ const calculateCommission = () => {
   };
 
   const sendToWix = () => {
-    if (!clientFeesState || clientFeesState.trim() === "") {
-      Swal.fire({
-        title: "Required Fees!",
-        text: "Fees value missing! Please calculate fees before sending.",
-        icon: "warning",
-        confirmButtonText: "Okay",
-      });
-      return;
-    }
+    // if (!clientFeesState || clientFeesState.trim() === "") {
+    //   Swal.fire({
+    //     title: "Required Fees!",
+    //     text: "Fees value missing! Please calculate fees before sending.",
+    //     icon: "warning",
+    //     confirmButtonText: "Okay",
+    //   });
+    //   return;
+    // }
 
     const {
       internalRemarks,
