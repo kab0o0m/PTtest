@@ -71,11 +71,20 @@ const Convert = () => {
   };
 
   // generate code handler
-  const generateCode = async (url) => {
+  const sendRequest = async (url) => {
     const response = await axios.get(url);
     const data = await response.data;
     return data;
   };
+  
+  // Check if client number is blacklisted
+  const fetchStatusByPhone = async () => {
+    const data = await sendRequest(
+      `https://admin.premiumtutors.sg/api/check-client-status/${formData.WhatsappNumber}`
+    );
+
+    return data
+  }
 
   /*Code generation:
     First letter is "C"
@@ -85,7 +94,7 @@ const Convert = () => {
   const codeGeneration = async (clientName, clientLevel, clientSubject) => {
     //my work
     //First letter
-    const data = await generateCode(
+    const data = await sendRequest(
       "https://admin.premiumtutors.sg/api/generated-codes"
     );
 
@@ -443,6 +452,23 @@ const calculateCommission = () => {
     calculateFees();
 
     setClientFeesState(clientFees);
+
+    // Check if Client is Blacklisted
+    const clientStatus = await fetchStatusByPhone();
+    if (clientStatus?.status) {
+        const value = await Swal.fire({
+          title: "Difficult or Blacklisted Client!",
+          text: "The client phone number is blacklisted or marked as difficult. Do you still want to continue.",
+          icon: "error",
+          confirmButtonText: "Yes",
+          showCancelButton: true,
+          cancelButtonText: "No",
+        })
+        if (value.isDismissed) {
+          setIsLoading(false);
+          return;
+        } 
+    }
 
     try {
       clientLevel = clientLevel.charAt(0).toUpperCase() + clientLevel.slice(1);
