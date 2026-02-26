@@ -19,8 +19,6 @@ const Convert = () => {
   const musicChannel = import.meta.env.VITE_LIVE_MUSIC;
   const sportsChannel = import.meta.env.VITE_LIVE_SPORTS;
   let origin = import.meta.env.VITE_TEST_IFRAME_ORIGIN;
-  console.log('ss');
-  console.log(botToken);
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   
 
