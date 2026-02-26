@@ -14,11 +14,12 @@ const Convert = () => {
   const [copy, setCopy] = useState("Copy to Clipboard");
   const [copy2, setCopy2] = useState("Copy to Clipboard");
   const [isLoading, setIsLoading] = useState(false);
-  const botToken = import.meta.env.VITE_LIVE_TOKEN.replace(/"/g, "");
-  const academicChannel = import.meta.env.VITE_LIVE_ACADEMIC.replace(/"/g, "");
-  const musicChannel = import.meta.env.VITE_LIVE_MUSIC.replace(/"/g, "");
-  const sportsChannel = import.meta.env.VITE_LIVE_SPORTS.replace(/"/g, "");
+  const botToken = import.meta.env.VITE_LIVE_TOKEN;
+  const academicChannel = import.meta.env.VITE_LIVE_ACADEMIC;
+  const musicChannel = import.meta.env.VITE_LIVE_MUSIC;
+  const sportsChannel = import.meta.env.VITE_LIVE_SPORTS;
   let origin = import.meta.env.VITE_TEST_IFRAME_ORIGIN;
+  console.log(botToken);
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   
 
