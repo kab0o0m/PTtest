@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./ClientProfile.css";
 import getNearestMrt from "nearest-mrt";
 import fees from "../../Fees.jsx";
@@ -14,6 +14,7 @@ const Convert = () => {
   const [copy, setCopy] = useState("Copy to Clipboard");
   const [copy2, setCopy2] = useState("Copy to Clipboard");
   const [isLoading, setIsLoading] = useState(false);
+  const assignmentIdRef = useRef(null);
   const botToken = import.meta.env.VITE_LIVE_TOKEN;
   const academicChannel = import.meta.env.VITE_LIVE_ACADEMIC;
   const musicChannel = import.meta.env.VITE_LIVE_MUSIC;
@@ -41,6 +42,7 @@ const Convert = () => {
     tutor3: false,
     remarks: "",
     internalRemarks: "",
+    strictInternalRemarks:"",
     manyTutorLink: "",
     ClientName: "",
     WhatsappNumber: "",
@@ -526,14 +528,14 @@ const calculateCommission = () => {
     }
 
     const {
-      internalRemarks,
+      remarks,
       manyTutorLink,
       ClientName,
       WhatsappNumber,
       isTuitionCenter,
     } = formData;
     const submitFormData = {
-      internalRemarks: internalRemarks,
+      remarks: remarks,
       manyTutorLink: manyTutorLink,
       ClientName: ClientName,
       WhatsappNumber: WhatsappNumber,
@@ -816,14 +818,23 @@ const calculateCommission = () => {
   };
 
   useEffect(() => {
+    window.top.postMessage({ type: "IFRAME_READY" }, "*");
     window.addEventListener("message", function (event) {
       if (event.data.autofilledData) {
+        // console.log(event.data.autofilledData);
+        assignmentIdRef.current = event.data.autofilledData.id ?? null;
         setFormData({
           ClientName: event.data.autofilledData.client_name
             ? event.data.autofilledData.client_name
             : "",
+          remarks: event.data.autofilledData.remarks
+            ? event.data.autofilledData.remarks
+            : "",
           internalRemarks: event.data.autofilledData.internal_remarks
             ? event.data.autofilledData.internal_remarks
+            : "",
+          strictInternalRemarks: event.data.autofilledData.strict_internal_remarks
+            ? event.data.autofilledData.strict_internal_remarks
             : "",
           WhatsappNumber: event.data.autofilledData.phone
             ? event.data.autofilledData.phone
@@ -836,6 +847,15 @@ const calculateCommission = () => {
         setTextOutput1(event.data.autofilledData.content);
       }
 
+      if (event.data.type === "UPDATE_INTERNAL_REMARKS_RESULT") {
+        if (event.data.success) {
+          setFormData(prev => ({
+            ...prev,
+            strictInternalRemarks: event.data.strict_internal_remarks,
+            internalRemarks: event.data.notes,
+          }));
+        }
+      }
       if (event.data.type === "AUTO_CASE_POSTING") {
         const autoCasePosting = event.data.autoCasePostingData;
         autoCasePosting?.categoryTutorPrices.forEach((category) => {
@@ -866,6 +886,16 @@ const calculateCommission = () => {
         setFormData({ ...autoCasePosting }); // Update form state with received data
       }
     });
+
+    const resizeObserver = new ResizeObserver(() => {
+      window.top.postMessage({
+        type: "IFRAME_RESIZE",
+        height: document.body.scrollHeight,
+      }, "*");
+    });
+    resizeObserver.observe(document.body);
+
+    return () => resizeObserver.disconnect();
   }, []);
 
   return (
@@ -1012,23 +1042,48 @@ const calculateCommission = () => {
             </div>
 
             <br />
-            <label htmlFor="timings">Remarks</label>
-            <input
-              type="text"
-              id="remarks"
+            <label htmlFor="remarks">Remarks</label>
+            <textarea
+              id="remarksField"
               name="remarks"
               value={formData.remarks}
               onChange={handleInputChange}
               placeholder="Tutor to be patient"
-            />
-            <div className="create-assignment-form-handler">
-              <label htmlFor="internalRemarks">Internal Remarks:</label>
+              style={{ minHeight: "100px", width: "100%" }}
+            ></textarea>
+            {assignmentIdRef.current && <div className="internal-remarks-card">
+              <div className="internal-remarks-card-header">
+                <strong>Internal Remarks</strong>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.top.postMessage({
+                      type: "OPEN_INTERNAL_REMARKS",
+                      id: assignmentIdRef.current,
+                      strict_internal_remarks: formData.strictInternalRemarks || "",
+                      notes: formData.internalRemarks || "",
+                    }, "*");
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+              <label htmlFor="strictInternalRemarks">Strict Requirements:</label>
               <textarea
-                onChange={handleInputChange}
+                readOnly
+                name="strictInternalRemarks"
+                id="strictInternalRemarks"
+                value={formData.strictInternalRemarks}
+              ></textarea>
+              <label htmlFor="internalRemarks">Notes:</label>
+              <textarea
+                readOnly
                 name="internalRemarks"
                 id="internalRemarks"
                 value={formData.internalRemarks}
               ></textarea>
+            </div>}
+            <div className="create-assignment-form-handler">
               <label htmlFor="manyTutorLink">ManyTutor Link:</label>
               <input
                 type="url"

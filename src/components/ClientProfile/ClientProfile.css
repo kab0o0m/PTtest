@@ -82,6 +82,7 @@ textarea {
   width: 100%;
   margin: 0.5rem 0 0.5rem 0;
   border: 1px solid #d1d5da;
+  box-sizing: border-box;
 }
 
 .name,
@@ -270,8 +271,9 @@ textarea {
   border: 0;
 }
 
-.create-assignment-form-handler #internalRemarks {
-  min-height: 200px;
+.create-assignment-form-handler #internalRemarks,
+.create-assignment-form-handler #strictInternalRemarks {
+  min-height: 100px;
   width: 100%;
 }
 
@@ -317,4 +319,36 @@ textarea {
 }
 .submit-handler #isTuitionCenter{
   width: unset;
+}
+
+.internal-remarks-card {
+  border: 1px solid #d1d5da;
+  border-radius: 4px;
+  padding: 12px;
+  margin: 0.5rem 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fafafa;
+}
+
+.internal-remarks-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.internal-remarks-card-header button {
+  cursor: pointer;
+  background-color: #7e8ef1;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  padding: 4px 12px;
+  font-size: 14px;
+}
+
+.internal-remarks-card textarea {
+  background: #f0f0f0;
+  cursor: default;
 }
