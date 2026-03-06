@@ -15,6 +15,7 @@ const Convert = () => {
   const [copy2, setCopy2] = useState("Copy to Clipboard");
   const [isLoading, setIsLoading] = useState(false);
   const assignmentIdRef = useRef(null);
+  const [assignmentId, setAssignmentId] = useState(null);
   const botToken = import.meta.env.VITE_LIVE_TOKEN;
   const academicChannel = import.meta.env.VITE_LIVE_ACADEMIC;
   const musicChannel = import.meta.env.VITE_LIVE_MUSIC;
@@ -529,6 +530,8 @@ const calculateCommission = () => {
 
     const {
       remarks,
+      internalRemarks,
+      strictInternalRemarks,
       manyTutorLink,
       ClientName,
       WhatsappNumber,
@@ -536,6 +539,8 @@ const calculateCommission = () => {
     } = formData;
     const submitFormData = {
       remarks: remarks,
+      internalRemarks: internalRemarks,
+      strictInternalRemarks: strictInternalRemarks,
       manyTutorLink: manyTutorLink,
       ClientName: ClientName,
       WhatsappNumber: WhatsappNumber,
@@ -823,6 +828,7 @@ const calculateCommission = () => {
       if (event.data.autofilledData) {
         // console.log(event.data.autofilledData);
         assignmentIdRef.current = event.data.autofilledData.id ?? null;
+        setAssignmentId(event.data.autofilledData.id ?? null);
         setFormData({
           ClientName: event.data.autofilledData.client_name
             ? event.data.autofilledData.client_name
@@ -1051,7 +1057,8 @@ const calculateCommission = () => {
               placeholder="Tutor to be patient"
               style={{ minHeight: "100px", width: "100%" }}
             ></textarea>
-            {assignmentIdRef.current && <div className="internal-remarks-card">
+            {assignmentId ? (
+            <div className="internal-remarks-card">
               <div className="internal-remarks-card-header">
                 <strong>Internal Remarks</strong>
                 <button
@@ -1082,7 +1089,28 @@ const calculateCommission = () => {
                 id="internalRemarks"
                 value={formData.internalRemarks}
               ></textarea>
-            </div>}
+            </div>
+            ) : (
+            <div className="internal-remarks-card">
+              <div className="internal-remarks-card-header">
+                <strong>Internal Remarks</strong>
+              </div>
+              <label htmlFor="strictInternalRemarks">Strict Requirements:</label>
+              <textarea
+                name="strictInternalRemarks"
+                id="strictInternalRemarks"
+                value={formData.strictInternalRemarks}
+                onChange={handleInputChange}
+              ></textarea>
+              <label htmlFor="internalRemarks">Notes:</label>
+              <textarea
+                name="internalRemarks"
+                id="internalRemarks"
+                value={formData.internalRemarks}
+                onChange={handleInputChange}
+              ></textarea>
+            </div>
+            )}
             <div className="create-assignment-form-handler">
               <label htmlFor="manyTutorLink">ManyTutor Link:</label>
               <input

@@ -351,4 +351,10 @@ textarea {
 .internal-remarks-card textarea {
   background: #f0f0f0;
   cursor: default;
+  min-height: 100px;
+}
+
+.internal-remarks-card textarea:not([readonly]) {
+  background: #fff;
+  cursor: text;
 }
