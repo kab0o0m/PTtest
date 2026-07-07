@@ -48,6 +48,7 @@ const Convert = () => {
     ClientName: "",
     WhatsappNumber: "",
     isTuitionCenter: false,
+    line: "Main",
   };
 
   //Initialise form to be empty
@@ -536,6 +537,7 @@ const calculateCommission = () => {
       ClientName,
       WhatsappNumber,
       isTuitionCenter,
+      line,
     } = formData;
     const submitFormData = {
       remarks: remarks,
@@ -546,6 +548,7 @@ const calculateCommission = () => {
       WhatsappNumber: WhatsappNumber,
       isTuitionCenter: isTuitionCenter,
       TelegramTemplate: textOutput1,
+      line: line,
     };
     window.top.postMessage(
       {
@@ -849,6 +852,9 @@ const calculateCommission = () => {
             ? event.data.autofilledData.many_tutors_link
             : "",
           isTuitionCenter: event.data.autofilledData.is_corporate_assignment,
+          line: event.data.autofilledData.line
+            ? event.data.autofilledData.line
+            : "Main",
         });
         setTextOutput1(event.data.autofilledData.content);
       }
@@ -889,7 +895,7 @@ const calculateCommission = () => {
           }
         });
         console.log("Received auto case posting data:", autoCasePosting);
-        setFormData({ ...autoCasePosting }); // Update form state with received data
+        setFormData((prev) => ({ ...autoCasePosting, line: prev.line })); // Update form state with received data, keep existing Line selection
       }
     });
 
@@ -922,6 +928,18 @@ const calculateCommission = () => {
               placeholder="Eg. Ms Nana"
               required
             />
+            <label htmlFor="line">Line</label>
+            <select
+              id="line"
+              name="line"
+              value={formData.line}
+              onChange={handleInputChange}
+            >
+              <option value="Main">Main</option>
+              <option value="Sub1">Sub1</option>
+              <option value="Sub2">Sub2</option>
+              <option value="Sub3">Sub3</option>
+            </select>
             <div className="postal-code">
               <label htmlFor="postal">Postal Code</label>
               <input
