@@ -1347,8 +1347,7 @@ const calculateCommission = () => {
       </div>
       <div className="send-telegram">
         <h1>Send to Telegram Channels</h1>
-        <div className="channel">
-          <button onClick={testLocation}>Test MRT</button>
+        <div className="channel">          
           <button onClick={sendToWix}>SUBMIT TO WIX</button>
           <button onClick={sendToAcademic}>ACADEMIC</button>
           <button onClick={sendToMusic}>MUSIC</button>
