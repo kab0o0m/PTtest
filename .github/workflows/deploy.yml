@@ -29,7 +29,9 @@ jobs:
           VITE_LIVE_TOKEN: ${{ secrets.VITE_LIVE_TOKEN }}
           VITE_LIVE_ACADEMIC: ${{ secrets.VITE_LIVE_ACADEMIC }}
           VITE_LIVE_MUSIC: ${{ secrets.VITE_LIVE_MUSIC }}
-          VITE_LIVE_SPORTS: ${{ secrets.VITE_LIVE_SPORTS }}          
+          VITE_LIVE_SPORTS: ${{ secrets.VITE_LIVE_SPORTS }}
+          VITE_ONEMAP_EMAIL: ${{ secrets.VITE_ONEMAP_EMAIL }}
+          VITE_ONEMAP_PASSWORD: ${{ secrets.VITE_ONEMAP_PASSWORD }}
         run: npm run build
 
       - name: Upload production-ready build files

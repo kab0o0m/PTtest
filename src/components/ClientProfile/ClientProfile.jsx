@@ -3,6 +3,7 @@ import "./ClientProfile.css";
 import getNearestMrt from "nearest-mrt";
 import fees from "../../Fees.jsx";
 import axios from "axios";
+import { getOneMapToken } from "../../oneMapAuth.js";
 import { DotLoader } from "react-spinners";
 import Swal from "sweetalert2";
 
@@ -134,7 +135,19 @@ const Convert = () => {
     try {
       const url = `https://www.onemap.gov.sg/api/common/elastic/search?searchVal=${postal}&returnGeom=Y&getAddrDetails=Y&pageNum=1`;
 
-      const response = await axios.get(url);
+      const searchOneMap = async (forceRefresh) =>
+        axios.get(url, {
+          headers: { Authorization: await getOneMapToken(forceRefresh) },
+        });
+
+      let response;
+      try {
+        response = await searchOneMap(false);
+      } catch (error) {
+        // Token rejected (expired or revoked): get a new one and retry once
+        if (error.response?.status !== 401) throw error;
+        response = await searchOneMap(true);
+      }
       if (response.status === 200) {
         const data = response.data;
 
@@ -910,6 +923,14 @@ const calculateCommission = () => {
     return () => resizeObserver.disconnect();
   }, []);
 
+  const testLocation = async (e) => {
+    console.log('===== Start');
+    let clientPostal = formData['postal'];
+    let clientAddress = await getFullAddress(clientPostal);
+    console.log('=====');
+    console.log(clientAddress);
+  }
+
   return (
     <div className="convert">
       <div className="convert-row-1">
@@ -1327,6 +1348,7 @@ const calculateCommission = () => {
       <div className="send-telegram">
         <h1>Send to Telegram Channels</h1>
         <div className="channel">
+          <button onClick={testLocation}>Test MRT</button>
           <button onClick={sendToWix}>SUBMIT TO WIX</button>
           <button onClick={sendToAcademic}>ACADEMIC</button>
           <button onClick={sendToMusic}>MUSIC</button>
